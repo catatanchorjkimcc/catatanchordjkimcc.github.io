@@ -413,11 +413,24 @@ function toggleMenu(i) {
   document.getElementById(`menu-${i}`).style.display = 'block';
 }
 
-function editTitle(i) {
+async function editTitle(i) {
   const t = prompt('Judul lagu:', titles[i]);
-  if (t) titles[i] = t;
+  if (!t) return;
+
+  titles[i] = t;
+
+  await setDoc(
+    doc(db, "songs", `song_${i}`),
+    {
+      title: t,
+      content: songs[i] || ''
+    },
+    { merge: true }
+  );
+
   init();
 }
+
 
 /* ================= VIEW ================= */
 function viewSong(i) {
